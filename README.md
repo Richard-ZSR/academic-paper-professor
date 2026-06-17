@@ -8,6 +8,33 @@ Act as a senior academic research professor for paper discovery, indexed acquisi
 
 ---
 
+## Example Prompts
+
+Two standard prompts that trigger the skill's two core workflows. Stating the output language (English or Chinese) up front lets the workflow run without a follow-up question.
+
+### Single-paper deep reading
+
+Point the skill at one paper by arXiv ID, PDF URL, or title:
+
+```text
+Act as a research professor and do a full deep reading of arXiv:1706.03762.
+Acquire the source, parse it with MinerU, reconstruct the complete theory,
+critique every experiment one by one, trace its historical roadmap, and write
+the analysis report in English.
+```
+
+### Top-N hot-paper download & deep reading
+
+Give the skill a topic, a time range, and how many papers to select:
+
+```text
+Find the top 10 hottest papers on LLM agents from the last month. Validate,
+download, and parse all of them, then write a separate professor-level deep
+reading for each paper in English.
+```
+
+---
+
 ## Skill Installation Directories
 
 After installation, skill files are copied to the corresponding agent's skills directory. The agent auto-discovers and loads them on startup.
