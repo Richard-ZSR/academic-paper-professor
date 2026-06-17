@@ -206,14 +206,57 @@ If arXiv or official PDF download fails, do not continue as if the full paper is
 
 ## MinerU Workflow
 
-Run MinerU when figures, tables, formulas, scanned pages, layout, or captions matter.
+MinerU (https://mineru.net) provides cloud-based PDF layout analysis, OCR, formula extraction, and table parsing. It is the sole OCR/layout engine for this skill — do not install or use any local OCR backend.
+
+Run MinerU when figures, tables, formulas, scanned pages, layout, or captions matter. If MinerU is unavailable, the skill continues with PyMuPDF text extraction and arXiv LaTeX source; the analysis will be weaker on layout-heavy papers but still valid.
+
+### MinerU Token Setup / MinerU 令牌配置
+
+A MinerU API token is required. When the skill detects that no token is available, output the following bilingual guide and stop MinerU-dependent steps:
+
+> **MinerU API Token Required / MinerU API 令牌必需**
+>
+> This skill uses the MinerU cloud API for PDF layout analysis, formula extraction, and table parsing. A free API token is required.
+>
+> 此技能使用 MinerU 云端 API 进行 PDF 版面分析、公式提取和表格解析。需要免费的 API 令牌。
+>
+> **How to get your token / 如何获取令牌：**
+>
+> 1. **Register / 注册**: Visit https://mineru.net and sign up for a free account (email or phone). / 访问 https://mineru.net 并注册免费账号（邮箱或手机号）。
+>
+> 2. **Get API Token / 获取 API 令牌**: After logging in, go to **Dashboard → API Keys** (or **个人中心 → API 密钥**) to create or copy your token. / 登录后进入 **Dashboard → API Keys**（或 **个人中心 → API 密钥**）创建或复制你的令牌。
+>
+> 3. **Configure / 配置** — choose ONE method / 选择以下任一方式：
+>
+>    **Method A (recommended) / 方式 A（推荐）**: Set environment variable / 设置环境变量：
+>    ```bash
+>    # Add to ~/.bashrc, ~/.zshrc, or your shell profile / 添加到 ~/.bashrc、~/.zshrc 或 shell 配置文件
+>    export MINERU_TOKEN='paste-your-token-here'
+>    ```
+>
+>    **Method B / 方式 B**: Pass via CLI flag / 通过命令行参数传入：
+>    ```bash
+>    python3 "$SKILL_DIR/scripts/execute_mineru.py" --token 'paste-your-token-here' --paper-dir <paper_dir> --is-ocr --enable-formula --enable-table
+>    ```
+>
+>    **Method C / 方式 C**: Edit the fallback constant in the script (not recommended for shared machines) / 编辑脚本中的回退常量（公共机器不推荐）：
+>    ```bash
+>    # Open execute_mineru.py, find LOCAL_MINERU_TOKEN, paste your token
+>    # 打开 execute_mineru.py，找到 LOCAL_MINERU_TOKEN，粘贴你的令牌
+>    LOCAL_MINERU_TOKEN = "your-token-here"
+>    ```
+>
+> 4. **Verify / 验证**: Run the script with any paper directory to confirm the token works. / 用任意论文目录运行脚本确认令牌可用。
+>
+> **Free Tier / 免费额度**: MinerU provides a free tier with limited daily API calls. See https://mineru.net for current limits. / MinerU 提供免费额度，每日 API 调用次数有限，详见 https://mineru.net。
+>
+> **Security reminder / 安全提醒**: Do not share, commit, or expose your API token. Do not print token values in reports or chat. / 请勿分享、提交或暴露你的 API 令牌。请勿在报告或对话中打印令牌值。
+
+### MinerU Usage
 
 Before submitting a batch paper to MinerU, confirm the paper directory came from a config that passed `validate_batch_ids.py`. If a paper directory was created before a title/id repair, delete or overwrite that stale directory first; MinerU must never process a PDF acquired from a mismatched ID/title pair.
 
-Use:
-
 ```bash
-export MINERU_TOKEN='<token>'
 python3 "$SKILL_DIR/scripts/execute_mineru.py" --paper-dir <paper_dir> --is-ocr --enable-formula --enable-table
 ```
 
@@ -224,7 +267,7 @@ MinerU API is asynchronous. The script submits a URL task or local batch upload 
 - `<paper_dir>/mineru/result/full.md`
 - returned JSON, image, formula, table, and layout files
 
-Resolve the MinerU token through `scripts/execute_mineru.py`: prefer a CLI `--token`, then `MINERU_TOKEN`, then any user-provisioned local fallback token already present in that script. A user-provisioned fallback token is allowed for this skill when the user explicitly maintains it. Do not print, copy, or expose token values in reports or chat. If no usable token is available after script resolution, state that MinerU parsing cannot run and continue only with available evidence. Do not fabricate MinerU output.
+Token resolution order in `scripts/execute_mineru.py`: CLI `--token` flag → `MINERU_TOKEN` environment variable → `LOCAL_MINERU_TOKEN` fallback constant in the script. If no usable token is available after all three checks, output the bilingual MinerU Token Setup guide above and continue only with available evidence (PyMuPDF text + LaTeX source). Do not fabricate MinerU output.
 
 ## Evidence Fusion
 
