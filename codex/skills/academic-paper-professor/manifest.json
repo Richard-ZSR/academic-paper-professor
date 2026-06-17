@@ -1,0 +1,11 @@
+{
+  "name": "academic-paper-professor",
+  "adapter_version": "1.0.0",
+  "version_file": "VERSION",
+  "generated_for": "codex",
+  "generated_date": "2026-06-17",
+  "packaging": {
+    "type": "single_codex_skill",
+    "entrypoint": "skills/academic-paper-professor/SKILL.md"
+  }
+}

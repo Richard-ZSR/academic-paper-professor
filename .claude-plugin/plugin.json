@@ -1,0 +1,7 @@
+{
+  "name": "academic-paper-professor",
+  "description": "Senior academic research professor skill for paper discovery, arXiv/PDF/source/MinerU parsing, single-paper deep reading, batch hot-paper analysis, experiment-by-experiment critique, theory reconstruction, historical roadmap tracing, and Markdown academic archiving.",
+  "author": {
+    "name": "Richard-ZSR"
+  }
+}
