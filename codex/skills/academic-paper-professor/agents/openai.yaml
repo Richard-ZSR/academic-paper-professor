@@ -1,0 +1,4 @@
+interface:
+  display_name: "Academic Paper Professor"
+  short_description: "Deep paper reading and academic archiving"
+  default_prompt: "Use $academic-paper-professor to find, parse, critique, and archive academic papers at seminar-report depth."
